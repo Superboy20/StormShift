@@ -1,21 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StormShift.Models;
+using StormShift.Services;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace StormShift.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly NewsService _newsService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, NewsService newsService)
         {
             _logger = logger;
+            _newsService = newsService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var headlines = await _newsService.GetTopHeadlines();
+            return View(headlines);
         }
 
         public IActionResult Privacy()
